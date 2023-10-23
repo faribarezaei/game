@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guessing Game</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Add this CSS code */
+        body {
+    background-color: #181b35;
+    font-family: 'Arial', sans-serif;
+    color: #FFFFFF;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url('tree3.png'); /* Make sure 'tree.png' is the correct path to your image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-position: left -300px; /* Position the image at the left, 200 pixels from the top */
+    overflow: hidden;
+}
+
+
+        h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .start-button {
+            background-color: #FFA500;
+            /* Orange color */
+            color: #FFF;
+            /* White text */
+            padding: 10px 40px;
+            /* Padding around the text */
+            border: none;
+            /* Remove default borders */
+            border-radius: 5px;
+            /* Rounded corners */
+            font-size: 18px;
+            /* Bigger text */
+            cursor: pointer;
+            /* Hand cursor on hover */
+            transition: background-color 0.3s;
+            /* Transition effect */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+        }
+
+        .start-button:hover {
+            background-color: #FF8C00;
+            /* Darker orange on hover */
+        }
+
+        /* Raindrop animation */
+        @keyframes rainfall {
+            0% {
+                transform: translateY(-10px);
+                opacity: 1;
+                top: 0;
+            }
+
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+                top: 100vh;
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                box-shadow: 0 0 5px 2px rgba(148, 148, 174, 0.8);
+            }
+
+            50% {
+                box-shadow: 0 0 5px 5px rgba(0, 0, 255, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 5px 2px rgba(0, 0, 255, 0.8);
+            }
+        }
+
+        /* Raindrop Lines */
+.raindrop {
+    position: absolute;
+    width: 1px; /* Width of the raindrop line */
+    height: 20px; /* Length of the raindrop line */
+    background: linear-gradient(to bottom, transparent 30%, #8BC4E3 30%, #8BC4E3 70%, transparent 70%);
+    animation: rainfall 3s linear infinite, ripple 1s infinite;
+}
+
+
+        .moon {
+            position: absolute;
+            top: 5%;
+            left: 92%;
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border-radius: 50%;
+            z-index: -1;
+            box-shadow: 0 0 50px 30px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Add this CSS code */
+        .transition-effect {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* Add this CSS code to your existing <style> element */
+/* Add this CSS code to your existing <style> element */
+    /* Add this CSS code to your existing <style> element */
+        .falling-leaf {
+    position: absolute;
+    width: 70px; /* Adjust the width of the leaf as needed */
+    height: auto; /* Maintain aspect ratio */
+    animation: fall 20s linear both, spin 10s linear;
+}
+
+.falling-leaf1 {
+    position: absolute;
+    width: 70px; /* Adjust the width of the leaf as needed */
+    height: auto; /* Maintain aspect ratio */
+    animation: falling 20s linear both, spin 10s linear;
+}
+
+@keyframes fall {
+    0% {
+        top: 20px; /* Start above the viewport */
+    }
+    2% {
+   left: 100vh; /* Move down to the bottom of the viewport */
+    }
+
+    100% {
+   top: 100vh; /* Move down to the bottom of the viewport */
+    }
+    
+}
+
+
+@keyframes falling {
+    0% {
+        top: 20px; /* Start above the viewport */
+    }
+  
+    100% {
+   top: 100vh; /* Move down to the bottom of the viewport */
+    }
+}  
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+#leaf1 {
+    animation-delay: 0s, 0s; 
+}
+
+#leaf2 {
+    animation-delay: 30s, 0s; 
+}
+
+#leaf3 {
+    animation-delay: 20s, 0s; 
+}
+
+#leaf3 {
+    animation-delay: 40s, 0s; 
+}
+
+#leaf3 {
+    animation-delay: 42s, 0s; 
+}
+    </style>
+</head>
+
+<body>
+    <div class="moon"></div>
+    <div id="rain-container"></div>
+
+    <div class="content-container">
+    
+        <h1>WORD GUESSING GAME</h1>
+        <button class="start-button" id="startButton" onclick="startGame()">Start</button>
+    </div>
+    <audio id="startAudio" src="begin.mp3" preload="auto"></audio>
+
+    <img src="leaf1.png" id="leaf1" class="falling-leaf1" style="left: 100px; top: -100px;">
+    <img src="leaf2.png" id="leaf2" class="falling-leaf1" style="left: 300px; top: -100px;">
+    <img src="leaf2.png" id="leaf3" class="falling-leaf" style="left: 150px; top: -100px;">
+    <img src="leaf4.png" id="leaf4" class="falling-leaf" style="left: 150px; top: -100px;">
+    <img src="leaf5.png" id="leaf5" class="falling-leaf1" style="left: 300px; top: -100px;">
+
+
+    <script>
+        let clickCount = 0;
+
+        // Check if the page has already been loaded
+        let pageLoaded = false;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Create raindrops when the page loads
+            createRaindrops();
+            pageLoaded = true;
+        });
+
+        function startGame() {
+            clickCount++;
+
+            // Check the click count
+            if (clickCount === 1) {
+                // On the first click, play the audio
+                const startAudio = document.getElementById('startAudio');
+                startAudio.play();
+
+               
+            } else if (clickCount === 2) {
+                // On the second click, navigate to the game.html page
+                window.location.href = "game.html";
+            }
+        }
+
+        // Function to create raindrops
+        function createRaindrops() {
+            const rainContainer = document.getElementById('rain-container');
+
+            // Create a certain number of raindrops
+            const numRaindrops = 200; // Adjust the number of raindrops as needed
+            for (let i = 0; i < numRaindrops; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.classList.add('raindrop');
+
+                // Randomize raindrop size, horizontal position, and animation duration
+                const size = Math.random() * 2 + 1;
+                const left = Math.random() * window.innerWidth;
+                const duration = Math.random() * 2 + 1;
+
+                raindrop.style.width = `${size}px`;
+                raindrop.style.height = `${size}px`;
+                raindrop.style.left = `${left}px`;
+                raindrop.style.top = `0`; // Start from the top of the page
+                raindrop.style.animationDuration = `${duration}s`;
+
+                rainContainer.appendChild(raindrop);
+            }
+        }
+
+        
+    </script>
+</body>
+
+</html>

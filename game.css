@@ -1,0 +1,99 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background-color: darkblue;
+    position: relative;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+#moon {
+    position: absolute;
+    bottom: 10%;
+    left: 80%;
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 0 50px 30px rgba(255, 255, 255, 0.6);
+}
+
+.star {
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+    animation: flicker 1.5s infinite alternate;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes shootingStarEffect {
+    0% {
+        left: -10%;
+        top: 10%;
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 110%;
+        top: 12%;
+        opacity: 0;
+    }
+}
+
+#shootingStar {
+    position: absolute;
+    top: 10%;
+    left: -10%;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(270deg, transparent, #FFF, transparent);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    transform: rotate(-45deg);
+    filter: drop-shadow(0 0 15px #FFF) drop-shadow(0 0 20px #FFF);
+}
+
+/* Game styles */
+#game {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+input[type="text"] {
+    width: 40px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#moon,
+.star {
+    transition: transform 0.5s;
+}
