@@ -159,6 +159,81 @@
             color: white;
             /* white text */
         }
+
+        .end-game-button-container {
+            position: absolute;
+
+            bottom: 50px;
+
+            left: 0;
+            display: flex;
+            justify-content: flex-start;
+            margin: 10px;
+
+        }
+
+
+        .end-game-button-container button {
+            background-color: #e9e5df;
+            color: #FF8C00;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+
+        }
+
+        .end-game-button-container button:hover {
+            background-color: #f4f1ee;
+            transform: scale(1.05);
+        }
+
+        .glass-border {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            backdrop-filter: blur(10px);
+            color: #f6cd9b;
+            font-size: 25px;
+            margin-top: 20px;
+            width: 900px;
+
+            max-height: 500px;
+
+            overflow-y: auto;
+
+
+        }
+
+
+        .additional-info-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 500px;
+            max-height: 500px;
+            overflow-y: auto;
+            position: fixed;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%);
+
+        }
+
+        /* Add styles to make list items display as bullet points */
+        .additional-info-container ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .additional-info-container ul li {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -183,18 +258,28 @@
             <button onclick="nextWord()">Next</button>
         </div>
         <p class="message"></p>
+        <div class="end-game-button-container">
+            <button onclick="redirectToThankYou()">END OF GAME</button>
+        </div>
     </div>
 
     <script>
+
         const words = [
-            { word: '2022', mask: '20__', heading: 'CYSSC received ---- Co_op Employer of the Year Award From Lassonde School of Engineering at York University.' },
+            { word: 'DOG', mask: '___', heading: "Which animal's sense of smell is at least 40x better than ours?" },
+            { word: 'SNAKE', mask: '___K_', heading: 'Which animal sleeps with open eyes?' },
+            { word: 'RAT', mask: '___', heading: 'Which animal laughs when they are tickled?' },
+            { word: 'MOSQUITOE', mask: '______T__', heading: 'The world most deadly animal?' },
+            { word: 'WHALE', mask: '_H___', heading: "The world' largest animal? Blue -----" },
+            { word: 'PINK', mask: '____', heading: "What color is hippo's sweat?" },
+            { word: 'PURPLE', mask: '______', heading: "What color is giraffe's tongue? Black, Blue, or -----" },
+            { word: 'SQUIRREL', mask: '_Q_____L', heading: "The animal that is known to plant thousands of trees across world?" },
+            { word: 'GIRAFFE', mask: '__R___E', heading: "The animal that has the highest blood pressure" },
+            { word: 'TWO', mask: '___', heading: "How many flowers do honey bees have to visit to produce one pound of honey?--- million(in letters)" },
+            { word: 'TWO', mask: '___', heading: "How far away can a wolf smell its prey? ---miles (in letters)" },
+            { word: '4000', mask: '____', heading: "How many teeth can a crocodile have over its lifetime? Up to ----(in number)" },
+            { word: 'OSTRICH', mask: 'O_____H', heading: "Which bird's eye is bigger than its brain?" },
 
-
-            { word: 'DIGITAL', mask: '___I_A_', heading: 'Cluster vision is advancing the ------agenda to make difference in the lives of Ontarians.' },
-
-            { word: 'NISSAN', mask: '__SS__', heading: 'Car Brand' },
-            { word: 'ELSA', mask: '_L__', heading: 'A Girl Name' },
-            { word: 'PEPPAPIG', mask: 'P___A__G', heading: 'A Cartoon' }
         ];
 
         let currentIndex = 0;
@@ -236,19 +321,19 @@
                 input.type = 'text';
                 input.maxLength = 1;
                 input.value = maskArray[idx] !== '_' ? maskArray[idx] : '';
-                input.readOnly = maskArray[idx] !== '_'; 
-                input.addEventListener('input', function() {
-            if (this.value) {
-                const nextInput = this.nextElementSibling;
-                if (nextInput && nextInput.tagName === 'INPUT') {
-                    nextInput.focus();
-                }
-            }
-        });
+                input.readOnly = maskArray[idx] !== '_';
+                input.addEventListener('input', function () {
+                    if (this.value) {
+                        const nextInput = this.nextElementSibling;
+                        if (nextInput && nextInput.tagName === 'INPUT') {
+                            nextInput.focus();
+                        }
+                    }
+                });
                 wordContainer.appendChild(input);
             });
 
-           
+
 
             message.textContent = '';
         }
@@ -279,7 +364,7 @@
             const maskArray = words[currentIndex].mask.split('');
             for (let i = 0; i < maskArray.length; i++) {
                 if (maskArray[i] !== '_' && guessedWord[i] !== maskArray[i]) {
-                    document.querySelector('.message').textContent = "You have not Filled the boxes yet!";
+                    document.querySelector('.message').textContent = "You have not filled the boxes yet!";
                     failAudio.play(); // Play fail audio for incorrect manipulation
                     wordInputs.forEach(input => input.classList.remove('correct', 'incorrect'));
                     return;
@@ -288,7 +373,8 @@
 
             // Check if the guessed word is correct
             if (guessedWord.toUpperCase() === words[currentIndex].word) {
-                document.querySelector('.message').textContent = "THAT'S CORRECT!";
+                const additionalInfo = getAdditionalInfo(words[currentIndex].word);
+                document.querySelector('.message').innerHTML = "THAT'S CORRECT! " + additionalInfo;
                 winnerAudio.play(); // Play winner audio for correct answer
                 wordInputs.forEach(input => {
                     input.classList.add('correct');
@@ -305,8 +391,37 @@
         }
 
 
+        function getAdditionalInfo(guessedWord) {
+            const additionalInfoMap = {
+                'DOG': `
+            <ul>
+                <li>Dogs have 100 million+ sensory receptors in their nasal cavity.</li>
+                <li>Humans have just 6 million in comparison.</li>
+                <li>A dog's odor-analyzing brain area is 40 times larger than in humans.</li>
+            </ul>
+        `,
+                'SNAKE': "Snakes can sleep with their eyes open!",
+                // Add more entries for other words
+            };
+
+            const additionalInfo = additionalInfoMap[guessedWord] || "";
+
+            // Wrap the additionalInfo in a div with glass effect border
+            if (additionalInfo) {
+                return `<div class="glass-border additional-info-container">${additionalInfo}</div>`;
+            }
+
+            return "";
+        }
+
+
+
+
         // Call the function to create stars
         createStars();
+        function redirectToThankYou() {
+            window.location.href = 'thank.html';
+        }
     </script>
 </body>
 
